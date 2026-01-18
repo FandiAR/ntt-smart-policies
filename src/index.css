@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+:root {
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+@theme {
+  --color-brand-primary: #3b82f6;
+  --color-brand-secondary: #10b981;
+  --color-glass: rgba(255, 255, 255, 0.1);
+  --color-glass-dark: rgba(0, 0, 0, 0.3);
+}
+
+@layer base {
+  body {
+    @apply bg-slate-900 text-slate-100 font-sans;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-xl;
+  }
+  
+  .btn-primary {
+    @apply px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all duration-200 font-medium shadow-lg shadow-blue-500/20 active:scale-95;
+  }
+}
