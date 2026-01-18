@@ -224,7 +224,7 @@ function App() {
 
         <div className="pt-6 border-t border-white/10 flex flex-col gap-2">
           <a
-            href="https://github.com/FandiAR/sekolah-pintar"
+            href="https://github.com/FandiAR/ntt-smart-policies"
             target="_blank"
             className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-white/5 rounded-xl transition-all"
           >
