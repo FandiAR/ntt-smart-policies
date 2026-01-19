@@ -276,7 +276,7 @@ function App() {
                   <Download size={14} /> Sample Thesis Data
                 </h4>
                 <p className="text-xs text-slate-400 mb-4">
-                  Gunakan data Akses Pendidikan NTT dari tesis (22 Wilayah) untuk uji coba cepat.
+                  Gunakan data Akses Pendidikan NTT - Thesis Tahun 2026 (22 Wilayah) untuk uji coba cepat.
                 </p>
                 <div className="flex gap-4">
                   <a
