@@ -54,46 +54,53 @@ const calculateSilhouette = (points, clusters) => {
     return scores.reduce((s, val) => s + val, 0) / scores.length;
 };
 
-// Core Runner using ml-kmeans
-const runKMeansLibrary = (dataArray, k) => {
+// Core Runner with n_init to match scikit-learn behavior
+const runKMeansLibrary = (dataArray, k, nInit = 10) => {
     if (dataArray.length === 0) return { clusters: [], centroids: [], sse: 0 };
     if (dataArray.length < k) {
         return { clusters: dataArray.map((_, i) => i % k), centroids: [], sse: 100 };
     }
 
-    try {
-        const result = kmeans(dataArray, k, {
-            initialization: 'mostDistant', // Like K-Means++
-            maxIterations: 100,
-            tolerance: 1e-6
-        });
+    let bestResult = null;
+    let minSSE = Infinity;
 
-        // Calculate SSE: ml-kmeans doesn't return it directly, so we calculate it
-        const sse = dataArray.reduce((sum, p, i) => {
-            const centroid = result.centroids[result.clusters[i]];
-            return sum + Math.pow(distance(p, centroid), 2);
-        }, 0);
+    for (let i = 0; i < nInit; i++) {
+        try {
+            const result = kmeans(dataArray, k, {
+                initialization: 'mostDistant', // K-Means++ equivalent
+                maxIterations: 100,
+                tolerance: 1e-6
+            });
 
-        return {
-            clusters: result.clusters,
-            centroids: result.centroids,
-            sse
-        };
-    } catch (e) {
-        console.error("Clustering Error:", e);
-        return { clusters: new Array(dataArray.length).fill(0), centroids: [], sse: 0 };
+            // Calculate SSE
+            const sse = dataArray.reduce((sum, p, idx) => {
+                const centroid = result.centroids[result.clusters[idx]];
+                return sum + Math.pow(distance(p, centroid), 2);
+            }, 0);
+
+            if (sse < minSSE) {
+                minSSE = sse;
+                bestResult = {
+                    clusters: result.clusters,
+                    centroids: result.centroids,
+                    sse
+                };
+            }
+        } catch (e) {
+            console.error("Clustering Iteration Error:", e);
+        }
     }
+
+    return bestResult || { clusters: new Array(dataArray.length).fill(0), centroids: [], sse: 0 };
 };
 
 // Elbow Method calculation
 export const getElbowData = (data, columns) => {
-    // Convert to simple array of arrays for ml-kmeans
     const dataArray = data.map(d => columns.map(col => d[`_${col}`] || 0));
-
     const sseData = [];
     const maxK = Math.min(6, dataArray.length);
     for (let k = 1; k <= maxK; k++) {
-        const { sse } = runKMeansLibrary(dataArray, k);
+        const { sse } = runKMeansLibrary(dataArray, k, 5); // Fewer inits for elbow is fine
         sseData.push({ k, sse });
     }
     return sseData;
@@ -101,10 +108,9 @@ export const getElbowData = (data, columns) => {
 
 // Main Exported K-Means
 export const kMeans = (data, columns, k = 3) => {
-    // Convert to array of arrays
     const dataArray = data.map(d => columns.map(col => d[`_${col}`] || 0));
 
-    const clustering = runKMeansLibrary(dataArray, k);
+    const clustering = runKMeansLibrary(dataArray, k, 10); // Match scikit-learn n_init=10
     const silhouette = calculateSilhouette(dataArray, clustering.clusters);
     const elbowData = getElbowData(data, columns);
 
@@ -112,19 +118,21 @@ export const kMeans = (data, columns, k = 3) => {
     const clusterStats = clustering.centroids.map((centroid, ci) => {
         const score = centroid.reduce((s, val) => s + val, 0) / columns.length;
         return { originalId: ci, score, centroid };
-    }).sort((a, b) => b.score - a.score); // Highest score = Maju
+    }).sort((a, b) => b.score - a.score);
 
-    // Explicit Label Mapping
+    // Explicit Label Mapping to match Python results and Thesis colors
     const labelMapping = {};
-    if (clusterStats[0]) labelMapping[clusterStats[0].originalId] = { label: 'Klaster C-1 (Maju)', color: '#3b82f6', name: 'Maju' };
-    if (clusterStats[1]) labelMapping[clusterStats[1].originalId] = { label: 'Klaster C-3 (Berkembang)', color: '#10b981', name: 'Berkembang' };
-    if (clusterStats[2]) labelMapping[clusterStats[2].originalId] = { label: 'Klaster C-2 (Tertinggal)', color: '#ef4444', name: 'Tertinggal' };
+    if (clusterStats[0]) labelMapping[clusterStats[0].originalId] = { label: 'C-1 (Maju)', color: '#10b981', name: 'Maju' }; // Emerald/Green
+    if (clusterStats[1]) labelMapping[clusterStats[1].originalId] = { label: 'C-3 (Berkembang)', color: '#3b82f6', name: 'Berkembang' }; // Blue
+    if (clusterStats[2]) labelMapping[clusterStats[2].originalId] = { label: 'C-2 (Tertinggal)', color: '#ef4444', name: 'Tertinggal' }; // Red
 
     const clusteredData = data.map((d, i) => {
         const cid = clustering.clusters[i];
         const res = labelMapping[cid] || { label: 'Unknown', color: '#94a3b8', name: '-' };
 
-        const readinessScore = columns.reduce((s, col) => s + (d[`_${col}`] || 0), 0) / columns.length;
+        // Digital Readiness calculation: Mean of X1, X2, X3, X4 (skipping X5/IPM) as per Python Colab
+        const readinessVariables = columns.filter(c => c !== 'X5');
+        const readinessScore = readinessVariables.reduce((s, col) => s + (d[`_${col}`] || 0), 0) / readinessVariables.length;
 
         return {
             ...d,
@@ -159,7 +167,7 @@ export const kMeans = (data, columns, k = 3) => {
 
 export const generatePolicy = (clusterLabel) => {
     const policies = {
-        'Klaster C-1 (Maju)': {
+        'C-1 (Maju)': {
             focus: 'Inovasi & Keberlanjutan',
             strategy: 'Maintenance & Expansion',
             recommendations: [
@@ -168,7 +176,7 @@ export const generatePolicy = (clusterLabel) => {
                 'Pengembangan inkubator bisnis teknologi daerah.'
             ]
         },
-        'Klaster C-3 (Berkembang)': {
+        'C-3 (Berkembang)': {
             focus: 'Akselerasi Infrastruktur',
             strategy: 'Digital Scaling',
             recommendations: [
@@ -177,7 +185,7 @@ export const generatePolicy = (clusterLabel) => {
                 'Pelatihan penggunaan platform merdeka mengajar secara intensif.'
             ]
         },
-        'Klaster C-2 (Tertinggal)': {
+        'C-2 (Tertinggal)': {
             focus: 'Pembangunan Dasar',
             strategy: 'Affirmative Action',
             recommendations: [

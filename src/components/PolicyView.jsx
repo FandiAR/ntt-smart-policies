@@ -42,11 +42,11 @@ const PolicyView = ({ data }) => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: idx * 0.1 }}
-                            className={`glass-card p-8 border-t-4 ${isMaju ? 'border-blue-500' : isTertinggal ? 'border-red-500' : 'border-emerald-500'
+                            className={`glass-card p-8 border-t-4 ${isMaju ? 'border-emerald-500' : isTertinggal ? 'border-red-500' : 'border-blue-500'
                                 } flex flex-col h-full ring-1 ring-white/5`}
                         >
                             <div className="flex items-center justify-between mb-6">
-                                <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${isMaju ? 'bg-blue-500/10 text-blue-400' : isTertinggal ? 'bg-red-500/10 text-red-500' : 'bg-emerald-500/10 text-emerald-400'
+                                <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${isMaju ? 'bg-emerald-500/10 text-emerald-400' : isTertinggal ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-400'
                                     }`}>
                                     {label}
                                 </span>
@@ -71,15 +71,12 @@ const PolicyView = ({ data }) => {
 
                             <div className="pt-6 border-t border-white/5">
                                 <h4 className="text-[10px] font-bold text-slate-500 uppercase mb-3">Target Wilayah ({clusters[label].length})</h4>
-                                <div className="flex flex-wrap gap-2">
-                                    {clusters[label].slice(0, 5).map(name => (
-                                        <span key={name} className="px-2 py-1 bg-white/5 rounded text-[10px] text-slate-400 truncate max-w-[120px]">
+                                <div className="flex flex-wrap gap-2 pt-2">
+                                    {clusters[label].map(name => (
+                                        <span key={name} className="px-2 py-1 bg-white/5 rounded text-[10px] text-slate-400 truncate max-w-[150px]">
                                             {name}
                                         </span>
                                     ))}
-                                    {clusters[label].length > 5 && (
-                                        <span className="text-[10px] text-slate-600 font-bold">+{clusters[label].length - 5} lainnya</span>
-                                    )}
                                 </div>
                             </div>
                         </motion.div>

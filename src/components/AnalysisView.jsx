@@ -89,7 +89,7 @@ const AnalysisView = ({ data }) => {
                                 <tr>
                                     <th className="py-3 px-2">Variabel</th>
                                     {centroids.map(c => (
-                                        <th key={c.id} className="py-3 px-2 text-center">{c.label.split(' ')[1]}</th>
+                                        <th key={c.id} className="py-3 px-2 text-center">{c.label.split(' ')[0]}</th>
                                     ))}
                                 </tr>
                             </thead>
