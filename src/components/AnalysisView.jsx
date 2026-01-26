@@ -29,12 +29,12 @@ const AnalysisView = ({ data }) => {
                         <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Metode Elbow (SSE)</span>
                     </div>
                     <div className="text-2xl font-bold">{metrics.sse.toFixed(4)}</div>
-                    <p className="text-[10px] text-slate-500 mt-1">Sum of Squared Errors pada K=3</p>
+                    <p className="text-[10px] text-slate-500 mt-1">Jumlah Kuadrat Error (SSE) pada K=3</p>
                 </div>
                 <div className="glass-card p-6 border-l-4 border-emerald-500">
                     <div className="flex items-center gap-3 mb-2">
                         <Target className="text-emerald-400" size={18} />
-                        <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Silhouette Score</span>
+                        <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Skor Siluet</span>
                     </div>
                     <div className="text-2xl font-bold">{metrics.silhouette.toFixed(4)}</div>
                     <p className="text-[10px] text-slate-500 mt-1">Kualitas pengelompokan (Optimal {'>'} 0.5)</p>
@@ -44,7 +44,7 @@ const AnalysisView = ({ data }) => {
                         <Users className="text-blue-400" size={18} />
                         <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Keanggotaan Klaster</span>
                     </div>
-                    <div className="text-2xl font-bold">{centroids.length} Grups</div>
+                    <div className="text-2xl font-bold">{centroids.length} Grup</div>
                     <p className="text-[10px] text-slate-500 mt-1">Terbagi menjadi Maju, Berkembang, Tertinggal</p>
                 </div>
             </div>
@@ -59,7 +59,7 @@ const AnalysisView = ({ data }) => {
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart data={metrics.elbowData}>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-                                <XAxis dataKey="k" stroke="#94a3b8" fontSize={12} label={{ value: 'Jumlah Cluster (k)', position: 'insideBottom', offset: -5, fill: '#94a3b8', fontSize: 10 }} />
+                                <XAxis dataKey="k" stroke="#94a3b8" fontSize={12} label={{ value: 'Jumlah Klaster (k)', position: 'insideBottom', offset: -5, fill: '#94a3b8', fontSize: 10 }} />
                                 <YAxis stroke="#94a3b8" fontSize={12} label={{ value: 'SSE', angle: -90, position: 'insideLeft', fill: '#94a3b8', fontSize: 10 }} />
                                 <Tooltip
                                     contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '12px' }}
@@ -78,10 +78,10 @@ const AnalysisView = ({ data }) => {
                     </div>
                 </div>
 
-                {/* Final Centroids Table */}
+                {/* Tabel Centroid Akhir */}
                 <div className="glass-card p-8">
                     <h3 className="text-lg font-bold mb-6 flex items-center gap-3">
-                        <Target className="text-emerald-400" size={20} /> Nilai Centroid Akhir (Final Cluster Centers)
+                        <Target className="text-emerald-400" size={20} /> Nilai Centroid Akhir (Pusat Klaster)
                     </h3>
                     <div className="overflow-x-auto">
                         <table className="w-full text-xs text-left">
@@ -120,7 +120,7 @@ const AnalysisView = ({ data }) => {
                     <ResponsiveContainer width="100%" height="100%">
                         <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                             <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                            <XAxis type="number" dataKey="readinessScore" name="Digital Score" stroke="#94a3b8" unit="%" label={{ value: 'Skor Kesiapan Digital (%)', position: 'bottom', fill: '#94a3b8', fontSize: 12 }} />
+                            <XAxis type="number" dataKey="readinessScore" name="Skor Digital" stroke="#94a3b8" unit="%" label={{ value: 'Skor Kesiapan Digital (%)', position: 'bottom', fill: '#94a3b8', fontSize: 12 }} />
                             <YAxis type="number" dataKey="X5" name="IPM" stroke="#94a3b8" unit="pt" label={{ value: 'Indeks Pembangunan Manusia (IPM)', angle: -90, position: 'left', fill: '#94a3b8', fontSize: 12 }} />
                             <ZAxis type="category" dataKey="_name" name="Wilayah" />
                             <Tooltip cursor={{ strokeDasharray: '3 3' }}
@@ -149,7 +149,7 @@ const AnalysisView = ({ data }) => {
                 </div>
             </div>
 
-            {/* Final Membership Table */}
+            {/* Tabel Keanggotaan Akhir */}
             <div className="glass-card p-8">
                 <h3 className="text-lg font-bold mb-6 flex items-center gap-3">
                     <Users className="text-emerald-400" size={20} /> Hasil Akhir Keanggotaan Klaster & Skor Kesiapan

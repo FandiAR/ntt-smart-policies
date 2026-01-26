@@ -68,7 +68,7 @@ function App() {
     if (activeTab === 'table') {
       return (
         <div className="glass-card p-6 overflow-hidden">
-          <h3 className="text-lg font-semibold mb-4">Raw Data Exploration</h3>
+          <h3 className="text-lg font-semibold mb-4">Eksplorasi Data Mentah</h3>
           <div className="overflow-x-auto max-h-[600px]">
             <table className="w-full text-sm text-left text-slate-300">
               <thead className="text-xs text-slate-500 uppercase border-b border-white/5 sticky top-0 bg-slate-900/50 backdrop-blur-md">
@@ -97,14 +97,14 @@ function App() {
       return <PolicyView data={currentData} />;
     }
 
-    // Default: Dashboard
+    // Default: Dasbor
     return (
       <div className="space-y-8">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <StatsCard title="Total Rows" value={currentData.stats.totalRows} icon={Rows} color="blue" />
           <StatsCard title="Total Columns" value={currentData.stats.totalColumns} icon={Columns} color="emerald" />
-          <StatsCard title="Policy Ready" value={currentData.clustered ? "YES" : "NO"} icon={Database} color="amber" />
+          <StatsCard title="Siap Kebijakan" value={currentData.clustered ? "YA" : "TIDAK"} icon={Database} color="amber" />
         </div>
 
         {/* Quick Insights */}
@@ -112,7 +112,7 @@ function App() {
           <DataChart data={currentData.clustered || currentData.raw} columns={currentData.columns} type="bar" />
           <div className="glass-card p-6 flex flex-col">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <ShieldCheck className="text-blue-400" size={18} /> Automated Insight
+              <ShieldCheck className="text-blue-400" size={18} /> Wawasan Otomatis
             </h3>
             <div className="flex-grow flex flex-col justify-center">
               {currentData.clustered ? (
@@ -137,7 +137,7 @@ function App() {
         </div>
 
         <div className="overflow-x-auto glass-card p-6">
-          <h3 className="text-lg font-semibold mb-4">Preview Original: {currentData.fileName}</h3>
+          <h3 className="text-lg font-semibold mb-4">Pratinjau Asli: {currentData.fileName}</h3>
           <table className="w-full text-sm text-left text-slate-300">
             <thead className="text-xs text-slate-500 uppercase border-b border-white/5">
               <tr>
@@ -177,28 +177,28 @@ function App() {
             onClick={() => { setActiveTab('dashboard'); setIsAddingMore(false); }}
             className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'dashboard' && !isAddingMore && !pendingUpload ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:bg-white/5'}`}
           >
-            <LayoutDashboard size={20} /> Dashboard
+            <LayoutDashboard size={20} /> Dasbor
           </button>
           <button
             disabled={datasets.length === 0}
             onClick={() => { setActiveTab('analysis'); setIsAddingMore(false); }}
             className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${datasets.length === 0 ? 'opacity-50 cursor-not-allowed' : activeTab === 'analysis' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-white/5'}`}
           >
-            <BarChart3 size={20} /> Analysis
+            <BarChart3 size={20} /> Analisis
           </button>
           <button
             disabled={datasets.length === 0}
             onClick={() => { setActiveTab('policy'); setIsAddingMore(false); }}
             className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${datasets.length === 0 ? 'opacity-50 cursor-not-allowed' : activeTab === 'policy' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-white/5'}`}
           >
-            <ShieldCheck size={20} /> Policy Advice
+            <ShieldCheck size={20} /> Saran Kebijakan
           </button>
           <button
             disabled={datasets.length === 0}
             onClick={() => { setActiveTab('table'); setIsAddingMore(false); }}
             className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${datasets.length === 0 ? 'opacity-50 cursor-not-allowed' : activeTab === 'table' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-white/5'}`}
           >
-            <TableIcon size={20} /> Data Table
+            <TableIcon size={20} /> Tabel Data
           </button>
 
           <div className="mt-8 mb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
@@ -218,7 +218,7 @@ function App() {
             onClick={() => setIsAddingMore(true)}
             className="flex items-center gap-3 px-4 py-2 text-sm text-blue-400 hover:bg-blue-400/10 rounded-lg transition-all mt-2"
           >
-            <Plus size={16} /> Add Dataset
+            <Plus size={16} /> Tambah Dataset
           </button>
         </nav>
 
@@ -228,10 +228,10 @@ function App() {
             target="_blank"
             className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-white/5 rounded-xl transition-all"
           >
-            <Settings size={20} /> Project Github
+            <Settings size={20} /> GitHub Proyek
           </a>
           <button onClick={handleReset} className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-400/10 rounded-xl transition-all">
-            <LogOut size={20} /> Reset All
+            <LogOut size={20} /> Reset Semua
           </button>
         </div>
       </aside>
@@ -273,7 +273,7 @@ function App() {
 
               <div className="mt-8 p-6 glass-card border-blue-500/20 bg-blue-500/5">
                 <h4 className="text-sm font-bold text-blue-400 flex items-center gap-2 mb-2">
-                  <Download size={14} /> Sample Thesis Data
+                  <Download size={14} /> Contoh Data Tesis
                 </h4>
                 <p className="text-xs text-slate-400 mb-4">
                   Gunakan data Akses Pendidikan NTT - Thesis Tahun 2026 (22 Wilayah) untuk uji coba cepat.
@@ -284,7 +284,7 @@ function App() {
                     className="text-xs text-blue-400 hover:underline font-bold"
                     download
                   >
-                    Download Sample CSV
+                    Unduh Contoh CSV
                   </a>
                 </div>
               </div>
@@ -294,7 +294,7 @@ function App() {
                   onClick={() => setIsAddingMore(false)}
                   className="mt-4 text-slate-400 hover:text-white transition-colors block w-full text-center text-sm"
                 >
-                  Cancel and return to dashboard
+                  Batal dan kembali ke dasbor
                 </button>
               )}
             </div>

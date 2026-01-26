@@ -130,10 +130,6 @@ const cleanNumber = (val) => {
         }
     }
 
-    // Special case for normalized data like "1.000" or "0.938"
-    // If it looks like a normalized value (less than 2 and has dots), don't treat dot as thousands separator
-    const isNormalizedCandidate = hasDot && !hasComma && parseFloat(str) <= 1.0;
-
     // Remove any remaining unwanted characters except digit, dot, and minus
     // If it's a normalized candidate, we KEEP the dot.
     // If it's a large number with dots (thousands), we might need to be careful.
@@ -144,18 +140,8 @@ const cleanNumber = (val) => {
     return isNaN(parsed) ? 0 : parsed;
 };
 
-const detectStandardTemplate = (data) => {
-    if (!data || data.length === 0) return false;
-    const firstRowKeys = Object.keys(data[0]);
-    // Check if it matches the new thesis structure (No, Kabupaten / Kota, X1, X2, X3, X4, X5)
-    const hasThesisHeaders = firstRowKeys.some(k => k.includes('X1')) && firstRowKeys.some(k => k.includes('Kabupaten'));
-    return hasThesisHeaders;
-};
-
 export const transformAndProcess = (rawData, mapping, fileName) => {
     if (!rawData || rawData.length === 0) return null;
-
-    const isStandard = detectStandardTemplate(rawData);
 
     const transformed = rawData.map(row => {
         const newRow = { _original: row };

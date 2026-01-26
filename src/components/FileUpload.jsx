@@ -61,7 +61,7 @@ const FileUpload = ({ onDataLoaded, onError }) => {
                 <div className="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mb-4">
                     <Upload className="text-blue-400 w-8 h-8" />
                 </div>
-                <h2 className="text-xl font-semibold mb-2">Upload Data Analisis</h2>
+                <h2 className="text-xl font-semibold mb-2">Unggah Data Analisis</h2>
                 <p className="text-slate-400 text-center max-w-xs text-sm">
                     Tarik dan lepas file CSV atau Excel di sini, atau klik untuk memilih file.
                 </p>
@@ -86,7 +86,7 @@ const FileUpload = ({ onDataLoaded, onError }) => {
                     download="template_analisis_pendidikan.csv"
                     className="w-full md:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-blue-600/20 text-center"
                 >
-                    Download Template (.CSV)
+                    Unduh Template (.CSV)
                 </a>
             </div>
         </div>

@@ -84,10 +84,18 @@ const DataChart = ({ data, columns, type = 'bar' }) => {
         }
     };
 
+    const titleMap = {
+        bar: `Distribusi ${displayY}`,
+        line: `Tren ${displayY}`,
+        pie: `Proporsi ${displayY}`
+    };
+
+    const chartTitle = titleMap[type] || `${type.charAt(0).toUpperCase() + type.slice(1)} Analisis`;
+
     return (
         <div className="glass-card p-6 h-[400px]">
             <h3 className="text-lg font-semibold mb-6 flex justify-between items-center">
-                {type.charAt(0).toUpperCase() + type.slice(1)} Analysis
+                {chartTitle}
                 <span className="text-[10px] font-mono text-slate-500 bg-white/5 px-2 py-1 rounded uppercase tracking-tighter">
                     {xKey} vs {displayY}
                 </span>
