@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   LayoutDashboard,
   BarChart3,
@@ -280,7 +280,7 @@ function App() {
                 </p>
                 <div className="flex gap-4">
                   <a
-                    href="/src/assets/ntt_data.csv"
+                    href="/ntt_data.csv"
                     className="text-xs text-blue-400 hover:underline font-bold"
                     download
                   >

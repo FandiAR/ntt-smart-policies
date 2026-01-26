@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+﻿import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload, FileType, Download } from 'lucide-react';
 import { parseCSV, parseExcel, processData } from '../utils/dataProcessor';
@@ -82,7 +82,7 @@ const FileUpload = ({ onDataLoaded, onError }) => {
                     </div>
                 </div>
                 <a
-                    href="/src/assets/template_analisis.csv"
+                    href="/template_analisis.csv"
                     download="template_analisis_pendidikan.csv"
                     className="w-full md:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-blue-600/20 text-center"
                 >
