@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState } from "react";
 import {
   LayoutDashboard,
   BarChart3,
@@ -13,21 +13,21 @@ import {
   Plus,
   ShieldCheck,
   Download,
-  ArrowRight
-} from 'lucide-react';
-import FileUpload from './components/FileUpload';
-import StatsCard from './components/StatsCard';
-import DataChart from './components/DataChart';
-import PolicyView from './components/PolicyView';
-import ColumnMapper from './components/ColumnMapper';
-import AnalysisView from './components/AnalysisView';
-import { transformAndProcess } from './utils/dataProcessor';
+  ArrowRight,
+} from "lucide-react";
+import FileUpload from "./components/FileUpload";
+import StatsCard from "./components/StatsCard";
+import DataChart from "./components/DataChart";
+import PolicyView from "./components/PolicyView";
+import ColumnMapper from "./components/ColumnMapper";
+import AnalysisView from "./components/AnalysisView";
+import { transformAndProcess } from "./utils/dataProcessor";
 
 function App() {
   const [datasets, setDatasets] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState("dashboard");
   const [isAddingMore, setIsAddingMore] = useState(false);
   const [pendingUpload, setPendingUpload] = useState(null);
 
@@ -42,11 +42,15 @@ function App() {
   };
 
   const handleMappingComplete = (mapping) => {
-    const processed = transformAndProcess(pendingUpload.raw, mapping, pendingUpload.fileName);
+    const processed = transformAndProcess(
+      pendingUpload.raw,
+      mapping,
+      pendingUpload.fileName
+    );
     if (processed) {
-      setDatasets(prev => [...prev, processed]);
+      setDatasets((prev) => [...prev, processed]);
       setCurrentIndex(datasets.length);
-      setActiveTab('dashboard');
+      setActiveTab("dashboard");
     }
     setPendingUpload(null);
     setIsAddingMore(false);
@@ -61,11 +65,11 @@ function App() {
   };
 
   const renderContent = () => {
-    if (activeTab === 'analysis') {
+    if (activeTab === "analysis") {
       return <AnalysisView data={currentData} />;
     }
 
-    if (activeTab === 'table') {
+    if (activeTab === "table") {
       return (
         <div className="glass-card p-6 overflow-hidden">
           <h3 className="text-lg font-semibold mb-4">Eksplorasi Data Mentah</h3>
@@ -73,16 +77,23 @@ function App() {
             <table className="w-full text-sm text-left text-slate-300">
               <thead className="text-xs text-slate-500 uppercase border-b border-white/5 sticky top-0 bg-slate-900/50 backdrop-blur-md">
                 <tr>
-                  {currentData.columns.map(col => (
-                    <th key={col} className="px-4 py-3 font-medium">{col}</th>
+                  {currentData.columns.map((col) => (
+                    <th key={col} className="px-4 py-3 font-medium">
+                      {col}
+                    </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {currentData.raw.map((row, i) => (
-                  <tr key={i} className="border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors">
-                    {currentData.columns.map(col => (
-                      <td key={col} className="px-4 py-3 whitespace-nowrap">{row[col]}</td>
+                  <tr
+                    key={i}
+                    className="border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors"
+                  >
+                    {currentData.columns.map((col) => (
+                      <td key={col} className="px-4 py-3 whitespace-nowrap">
+                        {row[col]}
+                      </td>
                     ))}
                   </tr>
                 ))}
@@ -93,7 +104,7 @@ function App() {
       );
     }
 
-    if (activeTab === 'policy') {
+    if (activeTab === "policy") {
       return <PolicyView data={currentData} />;
     }
 
@@ -102,26 +113,53 @@ function App() {
       <div className="space-y-8">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatsCard title="Total Rows" value={currentData.stats.totalRows} icon={Rows} color="blue" />
-          <StatsCard title="Total Columns" value={currentData.stats.totalColumns} icon={Columns} color="emerald" />
-          <StatsCard title="Siap Kebijakan" value={currentData.clustered ? "YA" : "TIDAK"} icon={Database} color="amber" />
+          <StatsCard
+            title="Total Rows"
+            value={currentData.stats.totalRows}
+            icon={Rows}
+            color="blue"
+          />
+          <StatsCard
+            title="Total Columns"
+            value={currentData.stats.totalColumns}
+            icon={Columns}
+            color="emerald"
+          />
+          <StatsCard
+            title="Siap Kebijakan"
+            value={currentData.clustered ? "YA" : "TIDAK"}
+            icon={Database}
+            color="amber"
+          />
         </div>
 
         {/* Quick Insights */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <DataChart data={currentData.clustered || currentData.raw} columns={currentData.columns} type="bar" />
+          <DataChart
+            data={currentData.clustered || currentData.raw}
+            columns={currentData.columns}
+            type="bar"
+          />
           <div className="glass-card p-6 flex flex-col">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <ShieldCheck className="text-blue-400" size={18} /> Wawasan Otomatis
+              <ShieldCheck className="text-blue-400" size={18} /> Wawasan
+              Otomatis
             </h3>
             <div className="flex-grow flex flex-col justify-center">
               {currentData.clustered ? (
                 <div className="space-y-4">
                   <p className="text-slate-400 leading-relaxed text-sm">
-                    Sistem telah berhasil mengelompokkan data ke dalam <span className="text-blue-400 font-bold">{currentData.centroids?.length || currentData.metrics?.k || 0} klaster</span> berdasarkan variabel yang Anda petakan.
+                    Sistem telah berhasil mengelompokkan data ke dalam{" "}
+                    <span className="text-blue-400 font-bold">
+                      {currentData.centroids?.length ||
+                        currentData.metrics?.k ||
+                        0}{" "}
+                      klaster
+                    </span>{" "}
+                    berdasarkan variabel yang Anda petakan.
                   </p>
                   <button
-                    onClick={() => setActiveTab('policy')}
+                    onClick={() => setActiveTab("policy")}
                     className="btn-primary w-fit flex items-center gap-2 text-sm"
                   >
                     Lihat Rekomendasi Kebijakan <ArrowRight size={14} />
@@ -137,20 +175,29 @@ function App() {
         </div>
 
         <div className="overflow-x-auto glass-card p-6">
-          <h3 className="text-lg font-semibold mb-4">Pratinjau Asli: {currentData.fileName}</h3>
+          <h3 className="text-lg font-semibold mb-4">
+            Pratinjau Asli: {currentData.fileName}
+          </h3>
           <table className="w-full text-sm text-left text-slate-300">
             <thead className="text-xs text-slate-500 uppercase border-b border-white/5">
               <tr>
-                {currentData.columns.slice(0, 5).map(col => (
-                  <th key={col} className="px-4 py-3 font-medium">{col}</th>
+                {currentData.columns.slice(0, 5).map((col) => (
+                  <th key={col} className="px-4 py-3 font-medium">
+                    {col}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {currentData.raw.slice(0, 5).map((row, i) => (
-                <tr key={i} className="border-b border-white/5 last:border-0 hover:bg-white/5">
-                  {currentData.columns.slice(0, 5).map(col => (
-                    <td key={col} className="px-4 py-3">{row[col]}</td>
+                <tr
+                  key={i}
+                  className="border-b border-white/5 last:border-0 hover:bg-white/5"
+                >
+                  {currentData.columns.slice(0, 5).map((col) => (
+                    <td key={col} className="px-4 py-3">
+                      {row[col]}
+                    </td>
                   ))}
                 </tr>
               ))}
@@ -169,34 +216,68 @@ function App() {
           <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
             <Activity className="text-white" size={24} />
           </div>
-          <h1 className="text-xl font-bold tracking-tight">PintarDash</h1>
+          <h1 className="text-xl font-bold tracking-tight">SmartPolicies</h1>
         </div>
 
         <nav className="flex flex-col gap-2 flex-grow">
           <button
-            onClick={() => { setActiveTab('dashboard'); setIsAddingMore(false); }}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'dashboard' && !isAddingMore && !pendingUpload ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:bg-white/5'}`}
+            onClick={() => {
+              setActiveTab("dashboard");
+              setIsAddingMore(false);
+            }}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+              activeTab === "dashboard" && !isAddingMore && !pendingUpload
+                ? "bg-blue-600 text-white shadow-lg"
+                : "text-slate-400 hover:bg-white/5"
+            }`}
           >
             <LayoutDashboard size={20} /> Dasbor
           </button>
           <button
             disabled={datasets.length === 0}
-            onClick={() => { setActiveTab('analysis'); setIsAddingMore(false); }}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${datasets.length === 0 ? 'opacity-50 cursor-not-allowed' : activeTab === 'analysis' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-white/5'}`}
+            onClick={() => {
+              setActiveTab("analysis");
+              setIsAddingMore(false);
+            }}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+              datasets.length === 0
+                ? "opacity-50 cursor-not-allowed"
+                : activeTab === "analysis"
+                ? "bg-blue-600 text-white"
+                : "text-slate-400 hover:bg-white/5"
+            }`}
           >
             <BarChart3 size={20} /> Analisis
           </button>
           <button
             disabled={datasets.length === 0}
-            onClick={() => { setActiveTab('policy'); setIsAddingMore(false); }}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${datasets.length === 0 ? 'opacity-50 cursor-not-allowed' : activeTab === 'policy' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-white/5'}`}
+            onClick={() => {
+              setActiveTab("policy");
+              setIsAddingMore(false);
+            }}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+              datasets.length === 0
+                ? "opacity-50 cursor-not-allowed"
+                : activeTab === "policy"
+                ? "bg-blue-600 text-white"
+                : "text-slate-400 hover:bg-white/5"
+            }`}
           >
             <ShieldCheck size={20} /> Saran Kebijakan
           </button>
           <button
             disabled={datasets.length === 0}
-            onClick={() => { setActiveTab('table'); setIsAddingMore(false); }}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${datasets.length === 0 ? 'opacity-50 cursor-not-allowed' : activeTab === 'table' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-white/5'}`}
+            onClick={() => {
+              setActiveTab("table");
+              setIsAddingMore(false);
+            }}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+              datasets.length === 0
+                ? "opacity-50 cursor-not-allowed"
+                : activeTab === "table"
+                ? "bg-blue-600 text-white"
+                : "text-slate-400 hover:bg-white/5"
+            }`}
           >
             <TableIcon size={20} /> Tabel Data
           </button>
@@ -207,11 +288,20 @@ function App() {
           {datasets.map((ds, idx) => (
             <button
               key={ds.id}
-              onClick={() => { setCurrentIndex(idx); setIsAddingMore(false); setPendingUpload(null); }}
-              className={`flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-all truncate ${currentIndex === idx && !isAddingMore && !pendingUpload ? 'bg-white/10 text-blue-400 border border-white/10' : 'text-slate-400 hover:bg-white/5'}`}
+              onClick={() => {
+                setCurrentIndex(idx);
+                setIsAddingMore(false);
+                setPendingUpload(null);
+              }}
+              className={`flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-all truncate ${
+                currentIndex === idx && !isAddingMore && !pendingUpload
+                  ? "bg-white/10 text-blue-400 border border-white/10"
+                  : "text-slate-400 hover:bg-white/5"
+              }`}
               title={ds.fileName}
             >
-              <FileSpreadsheet size={16} /> <span className="truncate">{ds.fileName}</span>
+              <FileSpreadsheet size={16} />{" "}
+              <span className="truncate">{ds.fileName}</span>
             </button>
           ))}
           <button
@@ -230,7 +320,10 @@ function App() {
           >
             <Settings size={20} /> GitHub Proyek
           </a>
-          <button onClick={handleReset} className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-400/10 rounded-xl transition-all">
+          <button
+            onClick={handleReset}
+            className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-400/10 rounded-xl transition-all"
+          >
             <LogOut size={20} /> Reset Semua
           </button>
         </div>
@@ -242,13 +335,21 @@ function App() {
           <div>
             <h2 className="text-3xl font-bold italic-font">Halo, Analis!</h2>
             <p className="text-slate-400 mt-1">
-              {pendingUpload ? `Pemetaan Data: ${pendingUpload.fileName}` : isAddingMore ? 'Silakan upload file tambahan.' : currentData ? `Menganalisis: ${currentData.fileName}` : 'Selamat datang! Mari mulai analisis data Anda.'}
+              {pendingUpload
+                ? `Pemetaan Data: ${pendingUpload.fileName}`
+                : isAddingMore
+                ? "Silakan upload file tambahan."
+                : currentData
+                ? `Menganalisis: ${currentData.fileName}`
+                : "Selamat datang! Mari mulai analisis data Anda."}
             </p>
           </div>
           <div className="flex items-center gap-4">
             <div className="glass-card px-4 py-2 flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-              <span className="text-xs font-medium text-slate-300">Sistem Siap</span>
+              <span className="text-xs font-medium text-slate-300">
+                Sistem Siap
+              </span>
             </div>
           </div>
         </header>
@@ -258,10 +359,13 @@ function App() {
             <ColumnMapper
               rawData={pendingUpload.raw}
               onComplete={handleMappingComplete}
-              onCancel={() => { setPendingUpload(null); setIsAddingMore(false); }}
+              onCancel={() => {
+                setPendingUpload(null);
+                setIsAddingMore(false);
+              }}
             />
           </div>
-        ) : (datasets.length === 0 || isAddingMore) ? (
+        ) : datasets.length === 0 || isAddingMore ? (
           <div className="flex justify-center items-center h-[60vh]">
             <div className="w-full max-w-2xl">
               {error && (
@@ -276,7 +380,8 @@ function App() {
                   <Download size={14} /> Contoh Data Tesis
                 </h4>
                 <p className="text-xs text-slate-400 mb-4">
-                  Gunakan data Akses Pendidikan NTT - Thesis Tahun 2026 (22 Wilayah) untuk uji coba cepat.
+                  Gunakan data Akses Pendidikan NTT - Thesis Tahun 2026 (22
+                  Wilayah) untuk uji coba cepat.
                 </p>
                 <div className="flex gap-4">
                   <a
