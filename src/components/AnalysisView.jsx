@@ -8,7 +8,7 @@ import { Activity, Target, Users, Map, BarChart2, Info } from 'lucide-react';
 const AnalysisView = ({ data }) => {
     if (!data || !data.metrics) return null;
 
-    const { metrics, centroids, clustered, variables } = data;
+    const { metrics, centroids, variables } = data;
 
     // Helper for variable labeling
     const labelMap = {
@@ -29,7 +29,7 @@ const AnalysisView = ({ data }) => {
                         <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Metode Elbow (SSE)</span>
                     </div>
                     <div className="text-2xl font-bold">{metrics.sse.toFixed(4)}</div>
-                    <p className="text-[10px] text-slate-500 mt-1">Jumlah Kuadrat Error (SSE) pada K=3</p>
+                    <p className="text-[10px] text-slate-500 mt-1">Jumlah Kuadrat Error (SSE) pada K={metrics.k}</p>
                 </div>
                 <div className="glass-card p-6 border-l-4 border-emerald-500">
                     <div className="flex items-center gap-3 mb-2">
@@ -45,7 +45,7 @@ const AnalysisView = ({ data }) => {
                         <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Keanggotaan Klaster</span>
                     </div>
                     <div className="text-2xl font-bold">{centroids.length} Grup</div>
-                    <p className="text-[10px] text-slate-500 mt-1">Terbagi menjadi Maju, Berkembang, Tertinggal</p>
+                    <p className="text-[10px] text-slate-500 mt-1">Terbagi menjadi {centroids.length} klaster berdasarkan data</p>
                 </div>
             </div>
 
@@ -65,7 +65,7 @@ const AnalysisView = ({ data }) => {
                                     contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '12px' }}
                                     itemStyle={{ color: '#a855f7' }}
                                 />
-                                <ReferenceLine x={3} stroke="#ef4444" strokeDasharray="3 3" label={{ value: 'K=3 (Siku)', position: 'top', fill: '#ef4444', fontSize: 10 }} />
+                                <ReferenceLine x={metrics.k} stroke="#ef4444" strokeDasharray="3 3" label={{ value: `K=${metrics.k} (Siku)`, position: 'top', fill: '#ef4444', fontSize: 10 }} />
                                 <Line type="monotone" dataKey="sse" stroke="#a855f7" strokeWidth={3} dot={{ r: 6, fill: '#a855f7' }} activeDot={{ r: 8 }} />
                             </LineChart>
                         </ResponsiveContainer>
@@ -73,7 +73,7 @@ const AnalysisView = ({ data }) => {
                     <div className="mt-4 p-4 bg-purple-500/5 rounded-xl border border-purple-500/10 flex gap-3">
                         <Info className="text-purple-400 shrink-0" size={16} />
                         <p className="text-[10px] text-slate-400 leading-relaxed text-italic">
-                            Berdasarkan grafik di atas, penurunan SSE melambat secara signifikan pada titik <strong>k=3</strong>, yang mengukuhkan validitas penggunaan 3 klaster sesuai standar tesis.
+                            Berdasarkan grafik di atas, penurunan SSE melambat secara signifikan pada titik <strong>k={metrics.k}</strong>, yang menunjukkan titik siku terbaik berdasarkan data yang masuk.
                         </p>
                     </div>
                 </div>

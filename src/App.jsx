@@ -118,7 +118,7 @@ function App() {
               {currentData.clustered ? (
                 <div className="space-y-4">
                   <p className="text-slate-400 leading-relaxed text-sm">
-                    Sistem telah berhasil mengelompokkan data ke dalam <span className="text-blue-400 font-bold">3 klaster</span> berdasarkan variabel yang Anda petakan.
+                    Sistem telah berhasil mengelompokkan data ke dalam <span className="text-blue-400 font-bold">{currentData.centroids?.length || currentData.metrics?.k || 0} klaster</span> berdasarkan variabel yang Anda petakan.
                   </p>
                   <button
                     onClick={() => setActiveTab('policy')}

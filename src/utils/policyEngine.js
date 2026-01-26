@@ -106,13 +106,40 @@ export const getElbowData = (data, columns) => {
     return sseData;
 };
 
+const detectElbowK = (sseData) => {
+    if (!sseData || sseData.length === 0) return 1;
+    if (sseData.length <= 2) return sseData[sseData.length - 1].k;
+
+    const first = sseData[0];
+    const last = sseData[sseData.length - 1];
+    const dx = last.k - first.k;
+    const dy = last.sse - first.sse;
+    const denom = Math.sqrt(dx * dx + dy * dy) || 1;
+
+    let bestK = sseData[1].k;
+    let maxDistance = -Infinity;
+
+    for (let i = 1; i < sseData.length - 1; i++) {
+        const point = sseData[i];
+        const numerator = Math.abs(dy * point.k - dx * point.sse + last.k * first.sse - last.sse * first.k);
+        const distanceToLine = numerator / denom;
+        if (distanceToLine > maxDistance) {
+            maxDistance = distanceToLine;
+            bestK = point.k;
+        }
+    }
+
+    return bestK;
+};
+
 // Main Exported K-Means
-export const kMeans = (data, columns, k = 3) => {
+export const kMeans = (data, columns, k) => {
     const dataArray = data.map(d => columns.map(col => d[`_${col}`] || 0));
 
-    const clustering = runKMeansLibrary(dataArray, k, 10); // Match scikit-learn n_init=10
-    const silhouette = calculateSilhouette(dataArray, clustering.clusters);
     const elbowData = getElbowData(data, columns);
+    const chosenK = k || detectElbowK(elbowData);
+    const clustering = runKMeansLibrary(dataArray, chosenK, 10); // Match scikit-learn n_init=10
+    const silhouette = calculateSilhouette(dataArray, clustering.clusters);
 
     // CRITICAL: RANK CLUSTERS BY MAGNITUDE OF CENTROID SCORE
     const clusterStats = clustering.centroids.map((centroid, ci) => {
@@ -122,9 +149,23 @@ export const kMeans = (data, columns, k = 3) => {
 
     // Explicit Label Mapping to match Python results and Thesis colors
     const labelMapping = {};
-    if (clusterStats[0]) labelMapping[clusterStats[0].originalId] = { label: 'C-1 (Maju)', color: '#10b981', name: 'Maju' }; // Emerald/Green
-    if (clusterStats[1]) labelMapping[clusterStats[1].originalId] = { label: 'C-3 (Berkembang)', color: '#3b82f6', name: 'Berkembang' }; // Blue
-    if (clusterStats[2]) labelMapping[clusterStats[2].originalId] = { label: 'C-2 (Tertinggal)', color: '#ef4444', name: 'Tertinggal' }; // Red
+    const labelPresets = [
+        { label: 'C-1 (Maju)', color: '#10b981', name: 'Maju' },
+        { label: 'C-2 (Berkembang)', color: '#3b82f6', name: 'Berkembang' },
+        { label: 'C-3 (Tertinggal)', color: '#ef4444', name: 'Tertinggal' }
+    ];
+    const fallbackColors = ['#8b5cf6', '#f59e0b', '#14b8a6', '#94a3b8'];
+    clusterStats.forEach((stat, idx) => {
+        if (labelPresets[idx]) {
+            labelMapping[stat.originalId] = labelPresets[idx];
+        } else {
+            labelMapping[stat.originalId] = {
+                label: `C-${idx + 1} (Tambahan)`,
+                color: fallbackColors[(idx - labelPresets.length) % fallbackColors.length],
+                name: 'Tambahan'
+            };
+        }
+    });
 
     const clusteredData = data.map((d, i) => {
         const cid = clustering.clusters[i];
@@ -160,7 +201,8 @@ export const kMeans = (data, columns, k = 3) => {
         metrics: {
             sse: clustering.sse,
             silhouette,
-            elbowData
+            elbowData,
+            k: chosenK
         }
     };
 };
@@ -176,7 +218,7 @@ export const generatePolicy = (clusterLabel) => {
                 'Pengembangan inkubator bisnis teknologi daerah.'
             ]
         },
-        'C-3 (Berkembang)': {
+        'C-2 (Berkembang)': {
             focus: 'Akselerasi Infrastruktur',
             strategy: 'Digital Scaling',
             recommendations: [
@@ -185,7 +227,7 @@ export const generatePolicy = (clusterLabel) => {
                 'Pelatihan penggunaan platform merdeka mengajar secara intensif.'
             ]
         },
-        'C-2 (Tertinggal)': {
+        'C-3 (Tertinggal)': {
             focus: 'Pembangunan Dasar',
             strategy: 'Affirmative Action',
             recommendations: [
